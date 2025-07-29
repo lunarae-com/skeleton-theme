@@ -1,6 +1,6 @@
 {% comment %}
   This template renders the product page with a vertical‑labels Swiper carousel,
-  product details, and add‑to‑cart form, all inline in product.liquid.
+  product details, and an add‑to‑cart form, all inline in product.liquid.
 {% endcomment %}
 
 <!-- include Swiper CSS -->
@@ -21,9 +21,6 @@
     bottom: 0;
     left: 0;
     width: 100%;           /* span full wrapper width */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     pointer-events: none;
     z-index: 10;
   }
@@ -35,7 +32,6 @@
     transform: rotate(180deg);
     color: white;
     font-size: 14px;
-    margin: 8px 0;
     text-align: center;
     transition: left .5s ease, color .3s ease;
     cursor: pointer;
@@ -76,7 +72,6 @@
   /* fallback for small screens */
   @media(max-width: 768px) {
     .wrapper { height: 60vh; }
-    .label-container { left: 8px; }
     .caption { left: 16px; font-size: 12px; padding: 6px 8px; }
   }
 </style>
@@ -92,6 +87,7 @@
       {% endif %}
     {% endfor %}
   </div>
+
   <div class="swiper">
     <div class="swiper-wrapper">
       {% for media in product.media %}
@@ -164,8 +160,10 @@
     const labels = document.querySelectorAll('.vertical-label');
     const slides = document.querySelectorAll('.swiper-slide');
 
+    // evenly space labels vertically to avoid overlap
     labels.forEach((label, idx) => {
-      label.style.top = `calc(50% + ${(idx - (labels.length-1)/2) * 40}px)`; // vertical distribution
+      const percent = (idx + 1) * 100 / (labels.length + 1);
+      label.style.top = `${percent}%`;
       label.addEventListener('click', () => {
         swiper.slideTo(idx);
         updateLabels(idx);
