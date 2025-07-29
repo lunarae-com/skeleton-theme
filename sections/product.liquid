@@ -8,26 +8,72 @@
 
 <style>
   /* Carousel + labels styling */
-  .wrapper { position: relative; display: flex; height: 100vh; overflow: hidden; }
-  .label-container { position: absolute; top: 0; bottom: 0; left: 0; width: 60px;
-    display: flex; flex-direction: column; justify-content: center;
-    z-index: 10; pointer-events: none;
+  .wrapper {
+    position: relative;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
   }
-  .vertical-label { writing-mode: vertical-rl; transform: rotate(180deg);
-    color: white; font-size: 14px; margin: 8px 0; text-align: center;
-    transition: transform .5s ease, color .3s ease;
-    cursor: pointer; pointer-events: auto;
+
+  .label-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;           /* span full wrapper width */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
   }
-  .vertical-label.shifted { transform: translateX(calc(100vw - 20px)) rotate(180deg); }
-  .swiper { width: 100%; height: 100%; }
-  .swiper-slide { position: relative; }
-  .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-  .caption { position: absolute; bottom: 20px; left: 80px;
-    background: rgba(0,0,0,0.6); color: white;
-    padding: 10px 14px; border-radius: 4px; font-size: 14px;
+
+  .vertical-label {
+    position: absolute;    /* anchor to container edges */
+    left: 0;               /* default flush-left */
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: white;
+    font-size: 14px;
+    margin: 8px 0;
+    text-align: center;
+    transition: left .5s ease, color .3s ease;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .vertical-label.shifted {
+    left: calc(100% - 20px); /* anchor to right edge */
+  }
+
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    position: relative;
+  }
+
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .caption {
+    position: absolute;
+    bottom: 20px;
+    left: 80px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 14px;
     z-index: 2;
   }
-  /* fallback for small screens: reduce carousel height */
+
+  /* fallback for small screens */
   @media(max-width: 768px) {
     .wrapper { height: 60vh; }
     .label-container { left: 8px; }
@@ -119,6 +165,7 @@
     const slides = document.querySelectorAll('.swiper-slide');
 
     labels.forEach((label, idx) => {
+      label.style.top = `calc(50% + ${(idx - (labels.length-1)/2) * 40}px)`; // vertical distribution
       label.addEventListener('click', () => {
         swiper.slideTo(idx);
         updateLabels(idx);
@@ -143,14 +190,3 @@
     updateLabels(0);
   });
 </script>
-
-
-{% schema %}
-{
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
-}
-{% endschema %}
